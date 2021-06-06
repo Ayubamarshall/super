@@ -20,7 +20,7 @@
 </marquee>
 		<div class="content">
 			<h2>About</h2>
-
+// hello world
 <div>
 <img src="campus.jpg" alt="italian trulli">
 <div><a><i class="fas fa-user"></i> FULL NAME: <STRONG>JOHN INUSA, AYUBA MARSHALL, SANI A ALI, SADIQ A ABDULAZIZ, MOHAMMAD JIDDA </STRONG></a></div>
