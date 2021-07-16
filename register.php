@@ -1,61 +1,113 @@
 
+<?php 
+require('head.php');
+require('navbar.php');
+ ?>
 
-<?php
-// Change this to your connection info.
-$DATABASE_HOST = 'localhost';
-$DATABASE_USER = 'root';
-$DATABASE_PASS = '';
-$DATABASE_NAME = 'phplogin';
-// Try and connect using the info above.
-$con = mysql_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
-if (mysqli_connect_errno()) {
-	// If there is an error with the connection, stop the script and display the error.
-	die ('Failed to connect to MySQL: ' . mysqli_connect_error());
-}
-//hello 
-// Now we check if the data was submitted, isset() function will check if the data exists.
-if (!isset($_POST['username'], $_POST['password'], $_POST['email'],$_POST['phone_no'],$_POST['address']) {
-	// Could not get the data that should have been sent.
-	die ('Please complete the registration form!');
-}
-// Make sure the submitted registration values are not empty.
-if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['email']) || empty($_POST['phone_no'] || empty($_POST['address']))) {
-	// One or more values are empty.
-	die ('Please complete the registration form');
-}
 
-// We need to check if the account with that username exists.
-if ($stmt = $con->prepare('SELECT id, password FROM accounts WHERE username = ?')) {
-	// Bind parameters (s = string, i = int, b = blob, etc), hash the password using the PHP password_hash function.
-	$stmt->bind_param('s', $_POST['username']);
-	$stmt->execute();
-	$stmt->store_result();
-	// Store the result so we can check if the account exists in the database.
-	if ($stmt->num_rows > 0) {
-		// Username already exists
-		echo 'Username exists, please choose another!';
-	} else {
-		// Username doesnt exists, insert new account
-if ($stmt = $con->prepare('INSERT INTO accounts (username, password, email,phone_no,address) VALUES (?, ?, ?,?,?)')) {
-	// We do not want to expose passwords in our database, so hash the password and use password_verify when a user logs in.
-	$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-	$stmt->bind_param('sss', $_POST['username'], $password, $_POST['email']);
-	$stmt->execute();
-	echo 'You have successfully registered, you can now login!';
-	
+<div class="container-fluid bg-light">
+<div class="row">
+ <div class="col-md-12 p-4 d-flex mx-auto">
+ 
+  <!-- Logging Form -->
+  <div class="col-md-5 login-page mx-auto mt-4">
+  <div class="card">
+  <div class="card-body p-4 m2">
 
-} else {
-	// Something is wrong with the sql statement, check to make sure accounts table exists with all 3 fields.
-	echo 'Could not prepare statement!';
-}
-	}
-	$stmt->close();
-} else {
-	// Something is wrong with the sql statement, check to make sure accounts table exists with all 3 fields.
-	echo 'Could not prepare statement!';
-}
-$con->close();
-?>
-<div>
-<a href="index.html"><i class="fas fa-user"></i>Login</a>
+
+  <?php if(!empty($_GET['msg'])){ ?>
+    <div class="alert alert-success d-flex align-items-center" role="alert">
+  <div>
+    <?= $_GET['msg'] ?>
+  </div>
+</div>   
+ <?php }
+ elseif(isset($_GET['err'])){?>
+  <div class="alert alert-warning d-flex align-items-center" role="alert">
+  <div>
+    <?= $_GET['err'] ?>
+  </div>
+</div>   
+ <?php }?>
+
+
+
+
+ <form action="controller/Users.php" method="POST">
+ <!-- Name -->
+ <div class="row">
+  <div class="col-md-6">
+  <div class="mb-3 align-center ">
+    <label for="fn" class="form-label">First Name</label>
+    <input type="text" name="first_name" class="form-control" id="fn" aria-describedby="name" required>
+  </div>
+  </div>
+  <div class="col-md-6">
+  <div class="mb-3 align-center ">
+    <label for="sn" class="form-label">Surname</label>
+    <input type="text" name="last_name" class="form-control" id="sn" aria-describedby="name" required>
+  </div>
+  </div>
+  </div>
+  <!-- End of names -->
+
+  <!-- Gender DOB -->
+<div class="row">
+  <div class="col-md-6">
+  <div class="mb-3 align-center ">
+    <label for="gender" class="form-label">Gender</label>
+    <select class="form-control" name="gender" id="gender">
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+    </select>
+  </div>
+  </div>
+  <div class="col-md-6">
+  <div class="mb-3 align-center ">
+    <label for="dob" class="form-label">Date of Birth</label>
+    <input type="date"  name="dob" class="form-control" id="dob" aria-describedby="dob" required>
+  </div>
+  </div>
+  </div>
+  <!-- end of Gender DOB -->
+
+   <!-- email/phone -->
+
+  <div class="mb-3 align-center ">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" name="email" class="form-control" id="fn" aria-describedby="email" required>
+  </div>
+  <div class="mb-3 align-center ">
+    <label for="phone" class="form-label">Phone</label>
+    <input type="tel" name="phone" class="form-control" id="sn" aria-describedby="phone" required>
+  </div>
+  <!-- End of email /phone -->
+
+   <!-- Passwords -->
+ <div class="row">
+  <div class="col-md-6">
+  <div class="mb-3 align-center ">
+    <label for="password" class="form-label">Password</label>
+    <input type="password" name="password" class="form-control" id="password" aria-describedby="password" required>
+  </div>
+  </div>
+  <div class="col-md-6">
+  <div class="mb-3 align-center ">
+    <label for="repassword" class="form-label">Comfirm Password</label>
+    <input type="password" name="repassword" class="form-control" id="repassword" aria-describedby="repassword" required>
+  </div>
+  </div>
+  </div>
+  <!-- End of Passwords -->
+<!-- submit -->
+  <button name="register" class="btn btn-primary">register</button>
+</form>
 </div>
+</div>
+ </div>
+ </div>
+
+
+<script src="dependencies/bootstrap5/js/bootstrap.js"></script>
+</body>
+</html>
